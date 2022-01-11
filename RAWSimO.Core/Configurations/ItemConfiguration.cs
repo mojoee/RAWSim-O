@@ -68,6 +68,10 @@ namespace RAWSimO.Core.Configurations
         /// </summary>
         public double DefaultWeight;
         /// <summary>
+        /// The default desnity to use when no density is present for the given item.
+        /// </summary>
+        public double DefaultDensity;
+        /// <summary>
         /// The default weight to use when no weight is present for the given combination of items.
         /// </summary>
         public double DefaultCoWeight;
@@ -83,6 +87,10 @@ namespace RAWSimO.Core.Configurations
         /// Specifies for each item description how much space is consumed by one unit of it.
         /// </summary>
         public List<Skvp<int, double>> ItemDescriptionWeights;
+        /// <summary>
+        /// Specifies for each item description how dense one unit is.
+        /// </summary>
+        public List<Skvp<int, double>> ItemDescriptionDensities;
         /// <summary>
         /// Specifies for each item description the size of a bundle when replenishing it.
         /// </summary>

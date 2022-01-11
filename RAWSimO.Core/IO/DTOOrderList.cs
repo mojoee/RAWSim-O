@@ -202,6 +202,11 @@ namespace RAWSimO.Core.IO
         [XmlAttribute]
         public double Weight;
         /// <summary>
+        /// The Density of one unit of this item.
+        /// </summary>
+        [XmlAttribute]
+        public double Density;
+        /// <summary>
         /// The letter of this item.
         /// </summary>
         [XmlAttribute]
@@ -222,6 +227,7 @@ namespace RAWSimO.Core.IO
                 ID = value.ID,
                 Type = value.Type.ToString(),
                 Weight = value.Weight,
+                Density = value.Density,
                 Letter = (value is ColoredLetterDescription) ? (value as ColoredLetterDescription).Letter : ' ',
                 Color = (value is ColoredLetterDescription) ? (value as ColoredLetterDescription).Color.ToString() : ""
             };
@@ -244,6 +250,7 @@ namespace RAWSimO.Core.IO
         {
             ItemDescription itemDescription = instance.CreateItemDescription(ID, (ItemType)Enum.Parse(typeof(ItemType), Type));
             itemDescription.Weight = Weight;
+            itemDescription.Density = Density;
             if (itemDescription.Type == ItemType.Letter)
             {
                 (itemDescription as ColoredLetterDescription).Color = (LetterColors)Enum.Parse(typeof(LetterColors), Color);

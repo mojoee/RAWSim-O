@@ -168,6 +168,22 @@ namespace RAWSimO.Core.Generator
             /// </summary>
             Gamma,
         }
+
+        /// <summary>
+        /// Defines the type of distribution used when generating the density for the item descritptions.
+        /// </summary>
+        public enum ItemDescriptionDensityDistributionType
+        {
+            /// <summary>
+            /// Uses a normal distribution to generate the densities.
+            /// </summary>
+            Normal,
+            /// <summary>
+            /// Uses an uniform distribution to generate the densities.
+            /// </summary>
+            Uniform,
+        }
+
         /// <summary>
         /// Defines the type of distribution used when generating the weights for the item descriptions.
         /// </summary>
@@ -213,6 +229,10 @@ namespace RAWSimO.Core.Generator
             /// The default weight per item type.
             /// </summary>
             public double DefaultWeight = 1;
+            /// <summary>
+            /// The default weight per item type.
+            /// </summary>
+            public double DefaultDensity = 1;
             /// <summary>
             /// The default co-weight for two items.
             /// </summary>
@@ -282,6 +302,29 @@ namespace RAWSimO.Core.Generator
             /// </summary>
             public double ItemWeightUB = 8;
             /// <summary>
+            /// Defines the type of distribution used when generating the densities for the item descritptions.
+            /// </summary>
+            public ItemDescriptionDensityDistributionType DensityDistributionType = ItemDescriptionDensityDistributionType.Normal;
+            /// <summary>
+            /// The mean value for the actual item weight.
+            /// </summary>
+            public double ItemDensityMu = 2;
+            /// <summary>
+            /// The standard deviation for the actual item weight.
+            /// </summary>
+            public double ItemDensitySigma = 1;
+            /// <summary>
+            /// The minimal value for the actual item weight.
+            /// </summary>
+            public double ItemDensityLB = 2;
+            /// <summary>
+            /// The maximal value for the actual item weight.
+            /// </summary>
+            public double ItemDensityUB = 8;
+            /// <summary>
+            /// Defines the type of distribution used when generating the densities for the item descritptions.
+            /// </summary>
+            /// <summary>
             /// Indicates whether the bundle size of the items will be supplied in the file or generated during runtime instead.
             /// </summary>
             public bool SupplyBundleSize = true;
@@ -322,12 +365,14 @@ namespace RAWSimO.Core.Generator
             SimpleItemGeneratorConfiguration config = new SimpleItemGeneratorConfiguration()
             {
                 DefaultWeight = preConfig.DefaultWeight,
+                DefaultDensity = preConfig.DefaultDensity,
                 DefaultCoWeight = preConfig.DefaultCoWeight,
                 ProbToUseCoWeight = preConfig.ProbToUseCoWeight
             };
             RandomizerSimple randomizer = new RandomizerSimple(0);
             List<SimpleItemDescription> itemDescriptions = new List<SimpleItemDescription>();
             List<Tuple<SimpleItemDescription, double>> itemDescriptionWeights = new List<Tuple<SimpleItemDescription, double>>();
+            List<Tuple<SimpleItemDescription, double>> itemDescriptionDensities = new List<Tuple<SimpleItemDescription, double>>();
             List<Tuple<SimpleItemDescription, SimpleItemDescription, double>> itemDescriptionCoWeights = new List<Tuple<SimpleItemDescription, SimpleItemDescription, double>>();
 
             // Add comment
@@ -359,6 +404,19 @@ namespace RAWSimO.Core.Generator
                     default: throw new ArgumentException("Unknown distribution: " + preConfig.WeightDistributionType);
                 }
                 description.Weight = itemDescriptionWeight;
+                // Randomly distribute densities to the item
+                double itemDescriptionDensity = 0;
+                switch (preConfig.DensityDistributionType)
+                {
+                    case ItemDescriptionDensityDistributionType.Normal:
+                        itemDescriptionDensity = randomizer.NextNormalDouble(preConfig.ItemDensityMu, preConfig.ItemDensitySigma, preConfig.ItemDensityLB, preConfig.ItemDensityUB);
+                        break;
+                    case ItemDescriptionDensityDistributionType.Uniform:
+                        itemDescriptionDensity = randomizer.NextDouble(preConfig.ItemDensityLB, preConfig.ItemDensityUB);
+                        break;
+                    default: throw new ArgumentException("Unknown distribution: " + preConfig.DensityDistributionType);
+                }
+                description.Density = itemDescriptionDensity;
                 // Randomly determine bundle size of the item
                 if (preConfig.SupplyBundleSize)
                 {
@@ -429,6 +487,7 @@ namespace RAWSimO.Core.Generator
             // Submit all
             config.ItemDescriptions = itemDescriptions.Select(d => new Skvp<int, double>() { Key = d.ID, Value = d.Hue }).ToList();
             config.ItemDescriptionWeights = itemDescriptions.Select(d => new Skvp<int, double>() { Key = d.ID, Value = d.Weight }).ToList();
+            config.ItemDescriptionDensities = itemDescriptions.Select(d => new Skvp<int, double>() { Key = d.ID, Value = d.Density }).ToList();
             if (preConfig.SupplyBundleSize)
                 config.ItemDescriptionBundleSizes = itemDescriptions.Select(d => new Skvp<int, int>() { Key = d.ID, Value = d.BundleSize }).ToList();
             config.ItemWeights = itemDescriptionWeights.Select(d => new Skvp<int, double>() { Key = d.Item1.ID, Value = d.Item2 }).ToList();

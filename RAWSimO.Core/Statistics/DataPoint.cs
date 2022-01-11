@@ -1987,6 +1987,10 @@ namespace RAWSimO.Core.Statistics
         /// </summary>
         public double Weight;
         /// <summary>
+        /// The density for generating the item.
+        /// </summary>
+        public double Density;
+        /// <summary>
         /// The number of times the item was ordered.
         /// </summary>
         public int OrderCount;
@@ -2008,6 +2012,7 @@ namespace RAWSimO.Core.Statistics
         {
             ItemDescriptionID = itemDescription.ID;
             Weight = itemDescription.Weight;
+            Density = itemDescription.Density;
             OrderCount = itemDescription.OrderCount;
             MeasuredFrequency = frequencyTracker.GetMeasuredFrequency(itemDescription);
             StaticFrequency = frequencyTracker.GetStaticFrequency(itemDescription);
@@ -2021,6 +2026,7 @@ namespace RAWSimO.Core.Statistics
             string[] values = line.Split(IOConstants.DELIMITER_VALUE);
             ItemDescriptionID = int.Parse(values[0], IOConstants.FORMATTER);
             Weight = double.Parse(values[1], IOConstants.FORMATTER);
+            Density = double.Parse(values[5], IOConstants.FORMATTER);
             OrderCount = int.Parse(values[2], IOConstants.FORMATTER);
             MeasuredFrequency = double.Parse(values[3], IOConstants.FORMATTER);
             StaticFrequency = double.Parse(values[4], IOConstants.FORMATTER);
@@ -2036,7 +2042,8 @@ namespace RAWSimO.Core.Statistics
                 nameof(Weight) + IOConstants.DELIMITER_VALUE +
                 nameof(OrderCount) + IOConstants.DELIMITER_VALUE +
                 nameof(MeasuredFrequency) + IOConstants.DELIMITER_VALUE +
-                nameof(StaticFrequency);
+                nameof(StaticFrequency) + IOConstants.DELIMITER_VALUE +
+                nameof(Density);
         }
         /// <summary>
         /// Returns a string representation of this datapoint.
@@ -2049,7 +2056,8 @@ namespace RAWSimO.Core.Statistics
                 Weight.ToString(IOConstants.FORMATTER) + IOConstants.DELIMITER_VALUE +
                 OrderCount.ToString(IOConstants.FORMATTER) + IOConstants.DELIMITER_VALUE +
                 MeasuredFrequency.ToString(IOConstants.FORMATTER) + IOConstants.DELIMITER_VALUE +
-                StaticFrequency.ToString(IOConstants.FORMATTER);
+                StaticFrequency.ToString(IOConstants.FORMATTER) + IOConstants.DELIMITER_VALUE +
+                Density.ToString(IOConstants.FORMATTER); 
         }
     }
 

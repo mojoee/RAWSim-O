@@ -19,6 +19,7 @@ namespace RAWSimO.Playground.Tests
             {
                 ItemDescriptionCount = 100,
                 DefaultWeight = 1,
+                DefaultDensity = 1,
                 DefaultCoWeight = 1,
                 ProbabilityWeightNormalMu = 1,
                 ProbabilityWeightNormalSigma = 3,
