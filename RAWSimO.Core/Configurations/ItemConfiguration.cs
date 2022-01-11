@@ -112,7 +112,7 @@ namespace RAWSimO.Core.Configurations
         public string GetMetaInfoBasedName()
         {
             string delimiter = "-";
-            return "ItemGen" + delimiter + ItemDescriptions.Count + delimiter + ItemWeights.Count + delimiter + ProbToUseCoWeight.ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + delimiter + ItemCoWeights.Count;
+            return "ItemGen" + delimiter + ItemDescriptions.Count + delimiter + ItemWeights.Count + delimiter + ProbToUseCoWeight.ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + delimiter + ItemCoWeights.Count + delimiter + ItemDescriptions.Count;
         }
     }
 }

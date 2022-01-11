@@ -34,6 +34,8 @@ namespace RAWSimO.DataPreparation
             int[] frequencyGroups = new int[groupCount]; double maxItemWeight = config.ItemWeights.Max(w => w.Value);
             bool plotWeights = config.ItemDescriptionWeights != null && config.ItemDescriptionWeights.Count > 0;
             List<double> weights = plotWeights ? config.ItemDescriptionWeights.Select(w => w.Value).OrderBy(w => w).ToList() : null;
+            bool plotDensities = config.ItemDescriptionDensities != null && config.ItemDescriptionDensities.Count > 0;
+            List<double> Densities = plotDensities ? config.ItemDescriptionDensities.Select(w => w.Value).OrderBy(w => w).ToList() : null;
             bool plotBundleSize = config.ItemDescriptionBundleSizes != null && config.ItemDescriptionBundleSizes.Count > 0;
             List<int> bundleSizes = plotBundleSize ? config.ItemDescriptionBundleSizes.Select(w => w.Value).OrderBy(w => w).ToList() : null;
             double overallWeight = config.ItemWeights.Sum(w => w.Value);
@@ -119,6 +121,21 @@ namespace RAWSimO.DataPreparation
                     }
                 }
             }
+            // Write data file for the item description densities plot
+            string itemDescriptionDensitiesPlotDataFile = outputBasename + "densities.dat";
+            if (plotDensities)
+            {
+                using (StreamWriter sw = new StreamWriter(Path.Combine(directory, itemDescriptionDensitiesPlotDataFile), false))
+                {
+                    sw.WriteLine(IOConstants.GNU_PLOT_COMMENT_LINE + " sku density");
+                    for (int i = 0; i < Densities.Count; i++)
+                    {
+                        // Write
+                        sw.WriteLine((i + 1).ToString() + IOConstants.GNU_PLOT_VALUE_SPLIT + Densities[i].ToString(IOConstants.FORMATTER));
+                    }
+                }
+            }
+
             // Write data file for the item description weights plot
             string itemDescriptionBundleSizesPlotDataFile = outputBasename + "bundlesizes.dat";
             if (plotBundleSize)
@@ -178,6 +195,15 @@ namespace RAWSimO.DataPreparation
                     sw.WriteLine("plot \\");
                     sw.WriteLine("\"" + itemDescriptionWeightsPlotDataFile + "\" u 1:2 w steps linestyle 1 t \"SKU size\"");
                 }
+                if (plotDensities)
+                {
+                    sw.WriteLine("set title \"" + frequencyFilename + "\"");
+                    sw.WriteLine("set xlabel \"SKU\"");
+                    sw.WriteLine("set ylabel \"density\"");
+                    sw.WriteLine("plot \\");
+                    sw.WriteLine("\"" + itemDescriptionDensitiesPlotDataFile + "\" u 1:2 w steps linestyle 1 t \"SKU density\"");
+                }
+
                 if (plotBundleSize)
                 {
                     sw.WriteLine("set title \"" + frequencyFilename + "\"");
