@@ -945,6 +945,7 @@ namespace RAWSimO.Visualization.Rendering
         private TextBlock _blockCapacity;
         private TextBlock _blockCapacityReserved;
         private TextBlock _blockStorageTag;
+        private TextBlock _blockMass;
         private TreeViewItem _treeItemContent;
         private TreeViewItem _root;
         private SimulationVisualContentManager _contentManager;
@@ -962,6 +963,7 @@ namespace RAWSimO.Visualization.Rendering
             _blockCapacityReserved.Text = _pod.GetInfoCapacityReserved().ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + "/" + _pod.GetInfoCapacity().ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER);
             _blockStorageTag.Text = _pod.InfoTagPodStorageInfo;
             _blockReadyForRefill.Text = _pod.GetInfoReadyForRefill().ToString();
+            _blockMass.Text = _pod.GetInfoMass().ToString();
 
             // Update content info
             if (_pod.GetInfoContentChanged())
@@ -1021,6 +1023,16 @@ namespace RAWSimO.Visualization.Rendering
                 };
                 capacityReservedPanel.Children.Add(_blockCapacityReserved);
                 _root.Items.Add(capacityReservedPanel);
+                // Add Mass
+                WrapPanel MassPanel = new WrapPanel { Orientation = Orientation.Horizontal };
+                MassPanel.Children.Add(new TextBlock { Text = "Mass: ", TextAlignment = TextAlignment.Right, MinWidth = _infoPanelLeftColumnWidth });
+                _blockMass = new TextBlock
+                {
+                    Text = _pod.GetInfoMass().ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER), 
+                    MinWidth = _infoPanelRightColumnWidth,
+                };
+                MassPanel.Children.Add(_blockMass);
+                _root.Items.Add(MassPanel);
                 // Add capacity reserved
                 WrapPanel storageTagPanel = new WrapPanel { Orientation = Orientation.Horizontal };
                 storageTagPanel.Children.Add(new TextBlock { Text = "Storage tag: ", TextAlignment = TextAlignment.Right, MinWidth = _infoPanelLeftColumnWidth });

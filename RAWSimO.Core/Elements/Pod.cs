@@ -48,6 +48,16 @@ namespace RAWSimO.Core.Elements
         internal double Capacity;
 
         /// <summary>
+        /// The Mass of the empty pod.
+        /// </summary>
+        internal double PodMass;
+
+        /// <summary>
+        /// The Mass of the loaded pod.
+        /// </summary>
+        internal double Mass;
+
+        /// <summary>
         /// The amount of capacity currently in use.
         /// </summary>
         internal double CapacityInUse;
@@ -186,6 +196,8 @@ namespace RAWSimO.Core.Elements
                 _contentChanged = true;
                 // Keep track of weight
                 CapacityInUse += itemBundle.BundleWeight;
+                // Keep track of mass
+                Mass += itemBundle.BundleMass;
                 // Keep track of reserved space
                 _registeredBundles.Remove(itemBundle);
                 CapacityReserved = _registeredBundles.Sum(b => b.BundleWeight);
@@ -228,6 +240,8 @@ namespace RAWSimO.Core.Elements
                 _itemDescriptionsContained.Remove(item);
             // Keep track of weight
             CapacityInUse -= item.Weight;
+            //keep track of Mass
+            Mass -= item.Density * item.Weight;
             // Notify the instance about the removed item
             Instance.NotifyItemExtracted(this, item);
             // Prepare info for the interface
@@ -316,7 +330,8 @@ namespace RAWSimO.Core.Elements
             return
                 "Pod" + ID + "(" +
                 (CapacityInUse / Capacity).ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + "%" +
-                ((CapacityInUse + CapacityReserved) / Capacity).ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + "%)";
+                ((CapacityInUse + CapacityReserved) / Capacity).ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + "%" + 
+                Mass.ToString(IOConstants.EXPORT_FORMAT_SHORT, IOConstants.FORMATTER) + "%)";
         }
 
         #endregion
@@ -513,6 +528,11 @@ namespace RAWSimO.Core.Elements
         /// </summary>
         /// <returns>The capacity reserved.</returns>
         public double GetInfoCapacityReserved() { return CapacityReserved; }
+        /// <summary>
+        /// Gets the mass this pod has.
+        /// </summary>
+        /// <returns>The capacity of the pod.</returns>
+        public double GetInfoMass() { return Mass; }
         /// <summary>
         /// Indicates whether something changed 
         /// </summary>

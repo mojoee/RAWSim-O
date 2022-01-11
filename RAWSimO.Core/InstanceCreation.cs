@@ -332,14 +332,18 @@ namespace RAWSimO.Core
         /// <param name="radius">The radius of the pod.</param>
         /// <param name="orientation">The initial orientation of the pod.</param>
         /// <param name="capacity">The capacity of the pod.</param>
+        /// <param name="mass">The capacity of the pod.</param>
         /// <returns>The newly created pod.</returns>
-        public Pod CreatePod(int id, Tier tier, double x, double y, double radius, double orientation, double capacity)
+        public Pod CreatePod(int id, Tier tier, double x, double y, double radius, double orientation, double capacity, double mass)
         {
             // Consider override values
             if (SettingConfig.OverrideConfig != null && SettingConfig.OverrideConfig.OverridePodCapacity)
                 capacity = SettingConfig.OverrideConfig.OverridePodCapacityValue;
+            // Consider override values
+            if (SettingConfig.OverrideConfig != null && SettingConfig.OverrideConfig.OverridePodMass)
+                mass = SettingConfig.OverrideConfig.OverridePodMassValue;
             // Create the pod
-            Pod pod = new Pod(this) { ID = id, Tier = tier, Radius = radius, X = x, Y = y, Orientation = orientation, Capacity = capacity };
+            Pod pod = new Pod(this) { ID = id, Tier = tier, Radius = radius, X = x, Y = y, Orientation = orientation, Capacity = capacity, Mass= mass };
             Pods.Add(pod);
             tier.AddPod(pod);
             _idToPods[pod.ID] = pod;
@@ -359,14 +363,18 @@ namespace RAWSimO.Core
         /// <param name="radius">The radius of the pod.</param>
         /// <param name="orientation">The initial orientation of the pod.</param>
         /// <param name="capacity">The capacity of the pod.</param>
+        /// <param name="mass">The capacity of the pod.</param>
         /// <returns>The newly created pod.</returns>
-        public Pod CreatePod(int id, Tier tier, Waypoint waypoint, double radius, double orientation, double capacity)
+        public Pod CreatePod(int id, Tier tier, Waypoint waypoint, double radius, double orientation, double capacity, double mass)
         {
             // Consider override values
             if (SettingConfig.OverrideConfig != null && SettingConfig.OverrideConfig.OverridePodCapacity)
                 capacity = SettingConfig.OverrideConfig.OverridePodCapacityValue;
+            // Consider override values
+            if (SettingConfig.OverrideConfig != null && SettingConfig.OverrideConfig.OverridePodMass)
+                mass = SettingConfig.OverrideConfig.OverridePodMassValue;
             // Create the pod
-            Pod pod = new Pod(this) { ID = id, Tier = tier, Radius = radius, X = waypoint.X, Y = waypoint.Y, Orientation = orientation, Capacity = capacity, Waypoint = waypoint };
+            Pod pod = new Pod(this) { ID = id, Tier = tier, Radius = radius, X = waypoint.X, Y = waypoint.Y, Orientation = orientation, Capacity = capacity, Waypoint = waypoint, PodMass = mass  };
             Pods.Add(pod);
             tier.AddPod(pod);
             _idToPods[pod.ID] = pod;

@@ -30,6 +30,11 @@ namespace RAWSimO.Core.Items
         public double BundleWeight { get { return ItemCount * ItemDescription.Weight; } }
 
         /// <summary>
+        /// The Mass of this bundle.
+        /// </summary>
+        public double BundleMass { get { return BundleWeight * ItemDescription.Density; } }
+
+        /// <summary>
         /// The item-description of this physical item.
         /// </summary>
         public ItemDescription ItemDescription;

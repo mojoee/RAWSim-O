@@ -84,6 +84,14 @@ namespace RAWSimO.Core.Configurations
         /// </summary>
         public bool OverridePodCapacity = false;
         /// <summary>
+        /// Indicates whether to override the values given by the instance for the parameter.
+        /// </summary>
+        public bool OverridePodMass = false;
+        /// <summary>
+        /// The mas of the pods.
+        /// </summary>
+        public double OverridePodMassValue = double.NaN;
+        /// <summary>
         /// The capacity of the input stations.
         /// </summary>
         public double OverrideInputStationCapacityValue = double.NaN;

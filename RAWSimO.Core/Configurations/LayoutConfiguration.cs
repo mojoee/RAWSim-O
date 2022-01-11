@@ -83,6 +83,10 @@ namespace RAWSimO.Core.Configurations
         /// </summary>
         public double PodCapacity = 500;
         /// <summary>
+        /// The Mass of a pod.
+        /// </summary>
+        public double PodMass = 500;
+        /// <summary>
         /// The radius of the I/O-stations in m.
         /// </summary>
         public double StationRadius = 0.45;

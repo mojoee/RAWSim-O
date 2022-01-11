@@ -55,6 +55,11 @@ namespace RAWSimO.Core.IO
         [XmlAttribute]
         public double Capacity;
         /// <summary>
+        /// The Mass of the pod.
+        /// </summary>
+        [XmlAttribute]
+        public double Mass;
+        /// <summary>
         /// Creates a DTO representation of the original object.
         /// </summary>
         /// <param name="value">The original object.</param>
@@ -68,7 +73,8 @@ namespace RAWSimO.Core.IO
                 Radius = value.Radius,
                 Orientation = value.Orientation,
                 Tier = value.Tier.ID,
-                Capacity = value.Capacity
+                Capacity = value.Capacity,
+                Mass = value.Mass
             };
         }
 
@@ -87,7 +93,7 @@ namespace RAWSimO.Core.IO
         /// <returns>The original object created at the instance.</returns>
         public Pod Submit(Instance instance)
         {
-            return instance.CreatePod(ID, instance.GetTierByID(Tier), X, Y, Radius, Orientation, Capacity);
+            return instance.CreatePod(ID, instance.GetTierByID(Tier), X, Y, Radius, Orientation, Capacity, Mass);
         }
 
         #endregion

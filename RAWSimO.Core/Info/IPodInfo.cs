@@ -33,6 +33,11 @@ namespace RAWSimO.Core.Info
         /// <returns>The capacity reserved.</returns>
         double GetInfoCapacityReserved();
         /// <summary>
+        /// Gets the mass this pod has.
+        /// </summary>
+        /// <returns>The mass of the pod.</returns>
+        double GetInfoMass();
+        /// <summary>
         /// Gets information about number of items of the given kind in this pod.
         /// </summary>
         /// <returns>The number of units contained in the pod of the specified item.</returns>
