@@ -17,6 +17,12 @@ namespace RAWSimO.Core.Info
         /// </summary>
         /// <returns>The weight of the item.</returns>
         double GetInfoWeight();
+
+        /// <summary>
+        /// Gets the weight of one item of this type.
+        /// </summary>
+        /// <returns>The weight of the item.</returns>
+        double GetInfoMass();
         /// <summary>
         /// The type of the item.
         /// </summary>

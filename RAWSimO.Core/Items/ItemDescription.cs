@@ -37,6 +37,11 @@ namespace RAWSimO.Core.Items
         public double Weight;
 
         /// <summary>
+        /// Density of the item. This defines how heavy one instance of this item is.
+        /// </summary>
+        public double Density;
+
+        /// <summary>
         /// The type of the item.
         /// </summary>
         public abstract ItemType Type { get; }
@@ -81,6 +86,13 @@ namespace RAWSimO.Core.Items
         /// <returns>The weight of the item.</returns>
         public double GetInfoWeight() { return Weight; }
         /// <summary>
+        /// Gets the mass of one item of this type.
+        /// </summary>
+        /// <returns>The mass of the item.</returns>
+        public double GetInfoMass()
+        {return Weight*Density; }
+
+        /// <summary>
         /// The type of the item.
         /// </summary>
         public ItemType GetInfoType() { return Type; }
@@ -89,6 +101,7 @@ namespace RAWSimO.Core.Items
         /// </summary>
         /// <returns>A string representing the item.</returns>
         public string GetInfoDescription() { return ToDescriptiveString(); }
+
 
         #endregion
 
