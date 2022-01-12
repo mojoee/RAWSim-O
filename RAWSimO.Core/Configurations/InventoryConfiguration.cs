@@ -59,6 +59,15 @@ namespace RAWSimO.Core.Configurations
         public double ItemWeightMax = 5;
 
         /// <summary>
+        /// The minimal density of one item.
+        /// </summary>
+        public double ItemDensityMin = 7;
+        /// <summary>
+        /// The maximal density of one item.
+        /// </summary>
+        public double ItemDensityMax = 7;
+
+        /// <summary>
         /// The minimal number of items in one bundle.
         /// </summary>
         public int BundleSizeMin = 6;

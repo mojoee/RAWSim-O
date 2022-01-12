@@ -295,6 +295,9 @@ namespace RAWSimO.Core.Management
                                     description.Weight = Instance.Randomizer.NextDouble(
                                         Instance.SettingConfig.InventoryConfiguration.ItemWeightMin,
                                         Instance.SettingConfig.InventoryConfiguration.ItemWeightMax);
+                                    description.Density = Instance.Randomizer.NextDouble(
+                                        Instance.SettingConfig.InventoryConfiguration.ItemDensityMin,
+                                        Instance.SettingConfig.InventoryConfiguration.ItemDensityMax);
                                     _itemDescriptions.Add(description);
                                 }
                             }
@@ -353,7 +356,13 @@ namespace RAWSimO.Core.Management
                                     _simpleItemGeneratorConfig.ItemDescriptionWeights.Single(w => w.Key == serializedDescription.Key).Value :
                                     // Generate a new weight to use
                                     Instance.Randomizer.NextDouble(Instance.SettingConfig.InventoryConfiguration.ItemWeightMin, Instance.SettingConfig.InventoryConfiguration.ItemWeightMax);
-                                // Check whether weights are specified by the config or have to be generated
+                                // Check whether densities are specified by the config or have to be generated
+                                description.Density = _simpleItemGeneratorConfig.ItemDescriptionDensities != null && _simpleItemGeneratorConfig.ItemDescriptionDensities.Count > 0 ?
+                                    // Use the density given by the config
+                                    _simpleItemGeneratorConfig.ItemDescriptionDensities.Single(w => w.Key == serializedDescription.Key).Value :
+                                    // Generate a new density to use
+                                    Instance.Randomizer.NextDouble(Instance.SettingConfig.InventoryConfiguration.ItemDensityMin, Instance.SettingConfig.InventoryConfiguration.ItemDensityMax);
+                                // Check whether bundlesizes are specified by the config or have to be generated
                                 description.BundleSize = _simpleItemGeneratorConfig.ItemDescriptionBundleSizes != null && _simpleItemGeneratorConfig.ItemDescriptionBundleSizes.Count > 0 ?
                                     // Use the weight given by the config
                                     _simpleItemGeneratorConfig.ItemDescriptionBundleSizes.Single(w => w.Key == serializedDescription.Key).Value :
