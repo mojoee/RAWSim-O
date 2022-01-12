@@ -785,6 +785,15 @@ namespace RAWSimO.Core.Bots
             // Count distanceTraveled
             this.StatDistanceTraveled += Math.Sqrt((X - xOld) * (X - xOld) + (Y - yOld) * (Y - yOld));
 
+            // Measure Energy Consumed
+            currentVelocity = Math.Sqrt((XVelocity * XVelocity) + (YVelocity * YVelocity));
+            accelerationForce = this.botMass * this.MaxAcceleration;
+            gravitationalForce = this.botMass * gravitation;
+            rollResistanceForce = rollResistanceCoefficient * gravitationalForce;
+            airResistanceForce = 1 / 2 * surfaceArea * cw * rhoAir * currentVelocity * currentVelocity;
+            totalForces = accelerationForce + gravitationalForce + airResistanceForce + rollResistanceForce;
+            this.StatEnergyConsumed += (delta * baseLoadConsumption) + totalForces * currentVelocity * delta + energyPodLifting;
+
             // Compute time in previous task
             this.StatTotalTaskTimes[StatLastTask] += delta;
             StatLastTask = CurrentTask != null ? CurrentTask.Type : BotTaskType.None;
@@ -1667,6 +1676,7 @@ namespace RAWSimO.Core.Bots
 
             //stop blocking
             BlockedUntil = _waitUntil = 0;
+
         }
 
         /// <summary>
@@ -1682,6 +1692,73 @@ namespace RAWSimO.Core.Bots
             //stop blocking
             BlockedUntil = _waitUntil = 0;
         }
+        #endregion
+
+
+
+        #region EnergyConsumption
+
+        /// <summary>
+        /// accelerationForce of the vehicle.
+        /// </summary>
+        public double accelerationForce { get; set; }
+        /// <summary>
+        /// Gravitational Force acting on vehicle.
+        /// </summary>
+        public double gravitationalForce { get; set; }
+        /// <summary>
+        /// rolling resistance Force.
+        /// </summary>
+        public double rollResistanceForce { get; set; }
+        /// <summary>
+        /// air Resistance Force.
+        /// </summary>
+        public double airResistanceForce { get; set; }
+        /// <summary>
+        /// Sum of all Forces acting on bot.
+        /// </summary>
+        public double totalForces { get; set; }
+        /// <summary>
+        /// Current velocity of the bot.
+        /// </summary>
+        public double currentVelocity { get; set; }
+        /// <summary>
+        /// roll resistance coefficeint of contact pair between bot and ground.
+        /// </summary>
+        public double rollResistanceCoefficient { get; set; }
+        /// <summary>
+        /// surface area of pod in driving direction.
+        /// </summary>
+        public int surfaceArea { get; private set; }
+        /// <summary>
+        /// drag value of driving resistance 0.6-0.8.
+        /// </summary>
+        public int cw { get; private set; }
+        /// <summary>
+        /// energy consumed from the lifting of pods.
+        /// </summary>
+        public double energyPodLifting { get; private set; }
+
+        /// <summary>
+        /// density of Air.
+        /// </summary>
+        public const double rhoAir = 1.225;
+
+        /// <summary>
+        /// Gravitational acceleration.
+        /// </summary>
+        public const double gravitation = 9.81;
+        /// <summary>
+        /// baseload consumption of a bot when turned on.
+        /// </summary>
+        public const double baseLoadConsumption = 5;
+
+        /// <summary>
+        /// mass of the bot
+        /// </summary>
+        private double botMass = 0;
+
+
         #endregion
     }
 

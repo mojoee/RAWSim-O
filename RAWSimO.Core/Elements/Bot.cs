@@ -245,6 +245,10 @@ namespace RAWSimO.Core.Elements
         /// </summary>
         public double StatDistanceTraveled;
         /// <summary>
+        /// The Energy consumedby this bot so far.
+        /// </summary>
+        public double StatEnergyConsumed;
+        /// <summary>
         /// The assigned task for this bot so far.
         /// </summary>
         public int StatAssignedTasks;
@@ -311,6 +315,7 @@ namespace RAWSimO.Core.Elements
             StatNumberOfSetdowns = 0;
             StatNumCollisions = 0;
             StatDistanceTraveled = 0;
+            StatEnergyConsumed = 0;
             StatDistanceEstimated = 0;
             StatDistanceRequestedOptimal = 0;
             StatAssignedTasks = 0;
