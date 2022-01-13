@@ -180,6 +180,10 @@ namespace RAWSimO.Core.IO
             /// </summary>
             TraveledDistanceProgressionRaw,
             /// <summary>
+            /// The energy consumption progression file.
+            /// </summary>
+            EnergyConsumptionProgressionRaw,
+            /// <summary>
             /// The file storing all inventory levels polled.
             /// </summary>
             InventoryLevelPollingRaw,
@@ -264,6 +268,7 @@ namespace RAWSimO.Core.IO
             { StatFile.CollisionProgressionRaw, "collisionprogression.csv" },
             { StatFile.TripsCompletedProgressionRaw, "tripscompleted.csv" },
             { StatFile.TraveledDistanceProgressionRaw, "traveleddistanceprogression.csv" },
+            { StatFile.EnergyConsumptionProgressionRaw, "energyconsumedprogression.csv" },
             { StatFile.InventoryLevelPollingRaw, "inventorylevel.csv" },
             { StatFile.PerformancePollingRaw, "performance.csv" },
             { StatFile.BundleOrderSituationPollingRaw, "bundleordersituations.csv" },

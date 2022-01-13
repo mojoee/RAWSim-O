@@ -792,6 +792,7 @@ namespace RAWSimO.Core.Bots
             rollResistanceForce = rollResistanceCoefficient * gravitationalForce;
             airResistanceForce = 1 / 2 * surfaceArea * cw * rhoAir * currentVelocity * currentVelocity;
             totalForces = accelerationForce + gravitationalForce + airResistanceForce + rollResistanceForce;
+            // need to take into account if took turn or not
             this.StatEnergyConsumed += (delta * baseLoadConsumption) + totalForces * currentVelocity * delta + energyPodLifting;
 
             // Compute time in previous task

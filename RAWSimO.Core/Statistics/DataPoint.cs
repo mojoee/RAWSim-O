@@ -2893,10 +2893,60 @@ namespace RAWSimO.Core.Statistics
         }
     }
 
+    public class EnergyDatapoint
+    {
+
+   
     /// <summary>
-    /// Constitutes one data-point storing bot information.
+    /// The timestamp of this snapshot.
     /// </summary>
-    public class BotDatapoint
+    public double TimeStamp;
+    /// <summary>
+    /// The energy consumed between this timestamp and the last one.
+    /// </summary>
+    public double EnergyConsumed;
+    /// <summary>
+    /// Creates a new datapoint.
+    /// </summary>
+    /// <param name="timestamp">The timestamp.</param>
+    /// <param name="energyConsumed">The energy.</param>
+    public EnergyDatapoint(double timestamp, double energyConsumed) { TimeStamp = timestamp; EnergyConsumed = energyConsumed; }
+    /// <summary>
+    /// Creates a new datapoint from a line serialization.
+    /// </summary>
+    /// <param name="line">The serialized datapoint.</param>
+    public EnergyDatapoint(string line)
+    {
+        string[] values = line.Split(IOConstants.DELIMITER_VALUE);
+        TimeStamp = double.Parse(values[0], IOConstants.FORMATTER);
+        EnergyConsumed = double.Parse(values[1], IOConstants.FORMATTER);
+    }
+    /// <summary>
+    /// Creates a line serialization of this datapoint.
+    /// </summary>
+    /// <returns>The line.</returns>
+    public string GetLine()
+    {
+        return
+            TimeStamp.ToString(IOConstants.EXPORT_FORMAT_SHORTER, IOConstants.FORMATTER) + IOConstants.DELIMITER_VALUE +
+            EnergyConsumed.ToString(IOConstants.EXPORT_FORMAT_SHORTER, IOConstants.FORMATTER);
+    }
+    /// <summary>
+    /// Creates a header for the line serializations.
+    /// </summary>
+    /// <returns>The header.</returns>
+    public static string GetHeader()
+    {
+        return
+            nameof(TimeStamp) + IOConstants.DELIMITER_VALUE +
+            nameof(EnergyConsumed);
+    }
+}
+
+/// <summary>
+/// Constitutes one data-point storing bot information.
+/// </summary>
+public class BotDatapoint
     {
         /// <summary>
         /// The timestamp of this snapshot.

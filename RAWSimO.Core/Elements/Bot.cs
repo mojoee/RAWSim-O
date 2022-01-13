@@ -257,6 +257,10 @@ namespace RAWSimO.Core.Elements
         /// </summary>
         public double StatDistanceEstimated;
         /// <summary>
+        /// The estimation of energy.
+        /// </summary>
+        public double StatEnergyEstimated;
+        /// <summary>
         /// The optimal overall distance for completion of all requested trips.
         /// </summary>
         public double StatDistanceRequestedOptimal;
@@ -315,8 +319,9 @@ namespace RAWSimO.Core.Elements
             StatNumberOfSetdowns = 0;
             StatNumCollisions = 0;
             StatDistanceTraveled = 0;
-            StatEnergyConsumed = 0;
             StatDistanceEstimated = 0;
+            StatEnergyConsumed = 0;
+            StatEnergyEstimated = 0;
             StatDistanceRequestedOptimal = 0;
             StatAssignedTasks = 0;
             StatTotalTimeMoving = 0;

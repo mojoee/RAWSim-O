@@ -25,6 +25,11 @@ namespace RAWSimO.Core.Statistics
         /// States the difference in simulation time between two datapoints stored by this observer.
         /// </summary>
         public const double STEP_LENGTH_DISTANCE_TRAVELED = 60;
+
+        /// <summary>
+        /// States the difference in simulation time between two datapoints stored by this observer.
+        /// </summary>
+        public const double STEP_LENGTH_ENERGY_CONSUMED = 120;
         /// <summary>
         /// States the difference in simulation time between two position polls.
         /// </summary>
@@ -70,6 +75,7 @@ namespace RAWSimO.Core.Statistics
         {
             _instance = instance;
             _nextSnapshotDistanceTraveled = _instance.StatTimeStart + STEP_LENGTH_DISTANCE_TRAVELED;
+            _nextSnapshotEnergyConsumed = _instance.StatTimeStart + STEP_LENGTH_ENERGY_CONSUMED;
             _lastDistanceTraveled = _instance.StatOverallDistanceTraveled;
             _nextSnapshotLocationPolling = _instance.StatTimeStart;
             _nextSnapshotPerformancePolling = _instance.StatTimeStart;
@@ -92,6 +98,7 @@ namespace RAWSimO.Core.Statistics
         {
             // Clear snapshots
             _nextSnapshotDistanceTraveled = _instance.Controller.CurrentTime + STEP_LENGTH_DISTANCE_TRAVELED;
+            _nextSnapshotEnergyConsumed = _instance.Controller.CurrentTime + STEP_LENGTH_ENERGY_CONSUMED;
             _lastDistanceTraveled = 0;
             _nextSnapshotLocationPolling = _instance.Controller.CurrentTime;
             _logDistanceTraveled.Clear();
@@ -124,6 +131,7 @@ namespace RAWSimO.Core.Statistics
         public void FlushData()
         {
             FlushTraveledDistance();
+            FlushEnergyConsumption();
             FlushLocationsPolled();
             FlushStorageLocationInfoPolled();
             FlushBotInfoPolled();
@@ -142,14 +150,29 @@ namespace RAWSimO.Core.Statistics
         private double _nextSnapshotDistanceTraveled;
 
         /// <summary>
+        /// The simulation time of the next snapshot.
+        /// </summary>
+        private double _nextSnapshotEnergyConsumed;
+
+        /// <summary>
         /// The overall traveled distance of the last snapshot.
         /// </summary>
         private double _lastDistanceTraveled;
 
         /// <summary>
+        /// The overall energy consumed of the last snapshot.
+        /// </summary>
+        private double _lastEnergyConsumed;
+
+        /// <summary>
         /// Log of the traveled distances over time.
         /// </summary>
         private List<DistanceDatapoint> _logDistanceTraveled = new List<DistanceDatapoint>();
+
+        /// <summary>
+        /// Log of the consumed energies over time.
+        /// </summary>
+        private List<EnergyDatapoint> _logEnergyConsumed = new List<EnergyDatapoint>();
 
         /// <summary>
         /// Flushes the monitored traveled distance data to the data-file.
@@ -178,6 +201,33 @@ namespace RAWSimO.Core.Statistics
             // Clear the data points
             _logDistanceTraveled.Clear();
         }
+
+        private void FlushEnergyConsumption()
+        {
+            // Init statistics directory
+            _instance.StatInitDirectory();
+            // Write collision progression
+            switch (_instance.SettingConfig.LogFileLevel)
+            {
+                case Configurations.LogFileLevel.All:
+                    bool alreadyExists = File.Exists(Path.Combine(_instance.SettingConfig.StatisticsDirectory, IOConstants.StatFileNames[IOConstants.StatFile.EnergyConsumptionProgressionRaw]));
+                    using (StreamWriter sw = new StreamWriter(Path.Combine(_instance.SettingConfig.StatisticsDirectory, IOConstants.StatFileNames[IOConstants.StatFile.EnergyConsumptionProgressionRaw]), true))
+                    {
+                        if (!alreadyExists)
+                            sw.WriteLine(IOConstants.COMMENT_LINE + EnergyDatapoint.GetHeader());
+                        foreach (var d in _logDistanceTraveled)
+                            sw.WriteLine(d.GetLine());
+                    }
+                    break;
+                case Configurations.LogFileLevel.FootprintOnly:
+                    break;
+                default: throw new ArgumentException("Unknown log level: " + _instance.SettingConfig.LogFileLevel);
+            }
+            // Clear the data points
+            _logEnergyConsumed.Clear();
+        }
+
+
 
         #endregion
 
@@ -728,6 +778,7 @@ namespace RAWSimO.Core.Statistics
                 _nextSnapshotBotInfoPolling,
                 _nextSnapshotInventoryLevelPolling,
                 _nextSnapshotDistanceTraveled,
+                _nextSnapshotEnergyConsumed,
                 _nextSnapshotLocationPolling);
         }
         /// <summary>
@@ -749,7 +800,22 @@ namespace RAWSimO.Core.Statistics
                 // Flush on getting too big
                 if (_logDistanceTraveled.Count >= Instance.STAT_MAX_DATA_POINTS)
                     FlushTraveledDistance();
+
             }
+            // Monitor energy consumption
+            if (currentTime >= _nextSnapshotEnergyConsumed)
+            {
+                // Calculate next snapshot
+                _nextSnapshotEnergyConsumed += STEP_LENGTH_DISTANCE_TRAVELED;
+                // Calculate energy consumption difference for this snapshot
+                double newOverallEnergyConsumption = _instance.StatOverallEnergyConsumed;
+                _logEnergyConsumed.Add(new EnergyDatapoint(_instance.StatTime, newOverallEnergyConsumption - _lastEnergyConsumed));
+                _lastEnergyConsumed = newOverallEnergyConsumption;
+                // Flush on getting too big
+                if (_logEnergyConsumed.Count >= Instance.STAT_MAX_DATA_POINTS)
+                    FlushEnergyConsumption();
+
+             }
             // Monitor positions
             if (currentTime >= _nextSnapshotLocationPolling)
             {

@@ -111,6 +111,14 @@ namespace RAWSimO.Core
         /// </summary>
         public double StatOverallDistanceEstimated { get { return Bots.Sum(b => b.StatDistanceEstimated); } }
         /// <summary>
+        /// The total energy consumed by the bots so far.
+        /// </summary>
+        public double StatOverallEnergyConsumed { get { return Bots.Sum(b => b.StatEnergyConsumed); } }
+        /// <summary>
+        /// The estimated distance by the bots.
+        /// </summary>
+        public double StatOverallEnergyEstimated { get { return Bots.Sum(b => b.StatDistanceEstimated); } }
+        /// <summary>
         /// The total number of assigned tasks so far.
         /// </summary>
         public int StatOverallAssignedTasks { get { return Bots.Sum(b => b.StatAssignedTasks); } }
@@ -989,6 +997,8 @@ namespace RAWSimO.Core
             sb.AppendLine("StatOverallCollisions: " + StatOverallCollisions);
             sb.AppendLine("StatOverallDistanceTraveled: " + StatOverallDistanceTraveled.ToString(IOConstants.FORMATTER));
             sb.AppendLine("StatOverallDistanceEstimated: " + StatOverallDistanceEstimated.ToString(IOConstants.FORMATTER));
+            sb.AppendLine("StatOverallEnergyConsumed: " + StatOverallEnergyConsumed.ToString(IOConstants.FORMATTER));
+            sb.AppendLine("StatOverallEnergyEstimated: " + StatOverallEnergyEstimated.ToString(IOConstants.FORMATTER));
             sb.AppendLine("StatOverallAssignedTasks: " + StatOverallAssignedTasks);
             sb.AppendLine("StatMaxMemoryUsed: " + StatMaxMemoryUsed);
             sb.AppendLine("StatRealTimeUsed: " + ((SettingConfig.StartTime != default(DateTime) && SettingConfig.StopTime != default(DateTime)) ? (SettingConfig.StopTime - SettingConfig.StartTime).TotalSeconds.ToString(IOConstants.FORMATTER) : "0"));
