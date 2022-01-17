@@ -222,6 +222,13 @@ namespace RAWSimO.DataPreparation
                 try { PrepareDistanceTraveledProgression(path, Path.Combine(path, IOConstants.StatFileNames[IOConstants.StatFile.TraveledDistanceProgressionRaw]), simulationDuration); }
                 catch (OutOfMemoryException) { Config.Logger("Error: Couldn't prepare the data due to memory limitations!"); }
             }
+            // Prepare energy progression data (if available)
+            if (File.Exists(Path.Combine(path, IOConstants.StatFileNames[IOConstants.StatFile.EnergyConsumptionProgressionRaw])))
+            {
+                Config.Logger("Preparing energy progression ...");
+                try { PrepareEnergyConsumedProgression(path, Path.Combine(path, IOConstants.StatFileNames[IOConstants.StatFile.EnergyConsumptionProgressionRaw]), simulationDuration); }
+                catch (OutOfMemoryException) { Config.Logger("Error: Couldn't prepare the data due to memory limitations!"); }
+            }
             // Prepare fixed time progression data (if available)
             Config.Logger("Preparing fixed time progression ...");
             //try { 
@@ -442,6 +449,40 @@ namespace RAWSimO.DataPreparation
 
         #endregion
 
+        #region energy consumed progression
+
+        private void PrepareEnergyConsumedProgression(string outputDirPath, string energyProgressionDataPath, double timeHorizon)
+        {
+            // Read data
+            LinkedList<EnergyDatapoint> datapoints = new LinkedList<EnergyDatapoint>();
+            using (StreamReader sr = new StreamReader(energyProgressionDataPath))
+            {
+                string line = "";
+                while ((line = sr.ReadLine()) != null)
+                {
+                    line = line.Trim();
+                    // Skip empty and comment lines
+                    if (line.StartsWith(IOConstants.COMMENT_LINE) || string.IsNullOrWhiteSpace(line))
+                        continue;
+
+                    // Parse data
+                    datapoints.AddLast(new EnergyDatapoint(line));
+                }
+            }
+            // Write prepared result files
+            using (StreamWriter sw = new StreamWriter(Path.Combine(outputDirPath, IOConstants.STAT_ENERGY_CONSUMED_PROGRESSION_RESULT_FILENAME + ".dat"), false))
+            {
+                // Write header
+                sw.WriteLine("% time energy");
+
+                // Write values
+                foreach (var value in datapoints.OrderBy(d => d.TimeStamp))
+                    sw.WriteLine(value.TimeStamp.ToString(IOConstants.FORMATTER) + IOConstants.GNU_PLOT_VALUE_SPLIT.ToString() + value.EnergyConsumed.ToString(IOConstants.FORMATTER));
+            }
+        }
+
+        #endregion
+
         #region Fixed time progression
 
         private void PrepareSingleFixedTimeProgression(string outputDirPath, CustomDiagramConfiguration customDiagram, double duration, PlotDataContentType dataType)
@@ -463,6 +504,7 @@ namespace RAWSimO.DataPreparation
                     case PlotDataContentType.BundleThroughputTimeAvg: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.BundleProgressionRaw]); break;
                     case PlotDataContentType.BundleTurnoverTimeAvg: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.BundleProgressionRaw]); break;
                     case PlotDataContentType.DistanceTraveled: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.TraveledDistanceProgressionRaw]); break;
+                    case PlotDataContentType.EnergyConsumed: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.EnergyConsumptionProgressionRaw]); break;
                     case PlotDataContentType.LastMileTripTimeOStation: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.TripsCompletedProgressionRaw]); break;
                     case PlotDataContentType.LastMileTripTimeIStation: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.TripsCompletedProgressionRaw]); break;
                     case PlotDataContentType.BotsQueueing: inputFile = Path.Combine(outputDirPath, IOConstants.StatFileNames[IOConstants.StatFile.BotInfoPollingRaw]); break;

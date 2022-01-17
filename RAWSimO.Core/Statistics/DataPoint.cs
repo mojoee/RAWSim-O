@@ -209,6 +209,14 @@ namespace RAWSimO.Core.Statistics
             /// </summary>
             DistanceTraveledPerBot,
             /// <summary>
+            /// The aggregated energy all robots consumed.
+            /// </summary>
+            EnergyConsumed,
+            /// <summary>
+            /// The energy consumed in average per bot.
+            /// </summary>
+            EnergyConsumedPerBot,
+            /// <summary>
             /// The aggregated distance estimated by all the robots.
             /// </summary>
             DistanceEstimated,
@@ -1218,6 +1226,8 @@ namespace RAWSimO.Core.Statistics
             { FootPrintEntry.PathPlanningTimeoutFractional, typeof(double) },
             { FootPrintEntry.DistanceTraveled, typeof(double) },
             { FootPrintEntry.DistanceTraveledPerBot, typeof(double) },
+            { FootPrintEntry.EnergyConsumed, typeof(double) },
+            { FootPrintEntry.EnergyConsumedPerBot, typeof(double) },
             { FootPrintEntry.DistanceEstimated, typeof(double) },
             { FootPrintEntry.DistanceRequestedOptimal, typeof(double) },
             { FootPrintEntry.TimeMoving, typeof(double) },
@@ -1539,6 +1549,8 @@ namespace RAWSimO.Core.Statistics
             _entryValues[FootPrintEntry.PathPlanningTimeoutFractional] = (double)instance.StatOverallPathPlanningTimeouts / instance.Observer.TimingPathPlanningDecisionCount;
             _entryValues[FootPrintEntry.DistanceTraveled] = instance.StatOverallDistanceTraveled;
             _entryValues[FootPrintEntry.DistanceTraveledPerBot] = instance.StatOverallDistanceTraveled / instance.Bots.Count;
+            _entryValues[FootPrintEntry.EnergyConsumed] = instance.StatOverallEnergyConsumed;
+            _entryValues[FootPrintEntry.EnergyConsumedPerBot] = instance.StatOverallEnergyConsumed / instance.Bots.Count;
             _entryValues[FootPrintEntry.DistanceEstimated] = instance.StatOverallDistanceEstimated;
             _entryValues[FootPrintEntry.DistanceRequestedOptimal] = instance.Bots.Sum(b => b.StatDistanceRequestedOptimal);
             _entryValues[FootPrintEntry.TimeMoving] = instance.Bots.Average(b => b.StatTotalTimeMoving);

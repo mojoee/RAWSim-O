@@ -215,7 +215,7 @@ namespace RAWSimO.Core.Statistics
                     {
                         if (!alreadyExists)
                             sw.WriteLine(IOConstants.COMMENT_LINE + EnergyDatapoint.GetHeader());
-                        foreach (var d in _logDistanceTraveled)
+                        foreach (var d in _logEnergyConsumed)
                             sw.WriteLine(d.GetLine());
                     }
                     break;

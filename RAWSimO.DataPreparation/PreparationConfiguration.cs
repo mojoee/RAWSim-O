@@ -351,6 +351,10 @@ namespace RAWSimO.DataPreparation
         /// </summary>
         DistanceTraveled,
         /// <summary>
+        /// Depicts data corresponding to the distance that the bots traveled in a given time horizon.
+        /// </summary>
+        EnergyConsumed,
+        /// <summary>
         /// Depicts data corresponding to the average time for completing the last part of a trip until reaching the destination output station.
         /// </summary>
         LastMileTripTimeOStation,

@@ -313,6 +313,10 @@ namespace RAWSimO.Core.IO
         /// </summary>
         public const string STAT_TRAVELED_DISTANCE_PROGRESSION_RESULT_FILENAME = "traveleddistanceprogression";
         /// <summary>
+        /// Name of the consumed energy progression result files.
+        /// </summary>
+        public const string STAT_ENERGY_CONSUMED_PROGRESSION_RESULT_FILENAME = "energyconsumedprogression";
+        /// <summary>
         /// Name of the progression script files.
         /// </summary>
         public const string STAT_PROGRESSION_SCRIPT_FILENAME = "progressionscript";
